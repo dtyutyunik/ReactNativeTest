@@ -1,92 +1,113 @@
-import React from 'react';
-import { Button, StyleSheet, Text, View,TextInput } from 'react-native';
-import ListItem from './src/components/ListItem/ListItem';
-import Input from './src/components/Input/Input';
+import React from "react";
+import { View, Text, Button } from "react-native";
+import {createStackNavigator, createSwitchNavigator, createAppContainer, createBottomTabNavigator } from "react-navigation";
+
+import AuthScreen from './src/components/AuthScreen/AuthScreen.js';
+import Login from './src/components/Login/Login';
+import Register from './src/components/Register/Register';
+import Welcome from './src/components/Welcome/Welcome';
+
+import TakePic from './src/components/Camera/TakePic.js';
+import ViewPic from './src/components/Camera/ViewPic.js'
+
+// <Button title="Go to AuthScreen" onPress={()=>  navigation.navigate('AuthScreen',{
+//   itemId: Math.floor(Math.random()*10)
+// })}/>
+
+
 export default class App extends React.Component {
-
-  state={
-    placeName: '',
-    places: [],
-  };
-
-  placeNameChangeHandler = (e)=>{
-  this.setState({placeName: e})};
-
-  buttonPressed = ()=>{
-
-    this.setState(prevState => {
-      return {
-        places: [...prevState.places, this.state.placeName.trim()]
-      };
-    })
+  render(){
+    return < AppContainer/>;
   }
+}
 
-
-  placeDeleteHandler = index =>{
-    this.setState(prevState=>{
-      return {
-        places: prevState.places.filter((place, i)=>{
-            return i !==index;
-        })
-      }
-    })
-  }
+class HomeScreen extends React.Component {
 
   render() {
-    const placesOutput= this.state.places.map((place, i)=>{
-      return <ListItem
-      key={i}
-      placeName={place}
-      onItemPressed={() => this.placeDeleteHandler(i)}
-      />
-    });
+
+    const { navigation } = this.props;
+
 
     return (
-      <View style={styles.container}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>Welcome to Landing Page</Text>
+
+        <Button title="Register" onPress={()=>navigation.navigate('Register')}/>
+        <Button title="Login" onPress={()=>navigation.navigate('Login')}/>
+        
 
 
 
-      <View style={styles.inputContainer}>
-      <Input
-          value={this.state.placeName}
-            placeholder="Enter stuff"
-            onChangeText={this.placeNameChangeHandler}
-      />
-
-        <Button style={styles.bu}
-        title="click Me"
-        onPress={this.buttonPressed}></Button>
-        </View>
-
-          <View style={styles.listContainer}>{placesOutput}</View>
-
-             <Text>{this.state.placeName}</Text>
       </View>
-
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+
+
+
+
+const CameraBottomNavigator = createBottomTabNavigator(
+  {
+    Camera: {
+      screen: TakePic,
+      title: 'Take a Pic'
+    },
+    ViewPic: {
+      screen: ViewPic,
+      title: 'View Pics',
+    },
   },
-  inputContainer: {
-    flexDirection: 'row',
-    backgroundColor: 'yellow',
-    justifyContent: 'space-between',
-    width: 320,
-      // width: '70%',
-     borderColor: "black",
-     // borderWidth: 1,
+  //   {
+  //     order: ['Camera', 'ViewPic'],
+  // }
+);
+
+// const AppNavigator = createBottomTabNavigator(
+const StackNavigator = createStackNavigator(
+  {
+    Home: HomeScreen,
+    AuthScreen: {
+      screen:AuthScreen,
+      navigationOptions: {
+          title: 'Auth Screen',
+          type: 'didBlur'
+      },
+    },
+    Login: {
+      screen: Login,
+      navigationOptions: {
+          title: 'Log In',
+          type: 'didBlur'
+      },
+    },
+    Register: {
+      screen: Register,
+      navigationOptions: {
+          title: 'Register'
+      },
+    },
+
+  Welcome: {
+    screen: Welcome,
+    navigationOptions: {
+        title: 'Welcome'
+    },
   },
-  listContainer:{
-    width: '100%',
-  },
-  bu:{
-    // width:'30%',
-  }
+},
+    {
+        initialRouteName: 'Home'
+      }
+
+);
+
+const AppNavigator = createSwitchNavigator({
+  StackNavigator: StackNavigator,
+  Camera: CameraBottomNavigator
+
 });
+
+
+
+
+const AppContainer = createAppContainer(AppNavigator);
