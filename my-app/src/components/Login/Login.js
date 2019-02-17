@@ -12,17 +12,33 @@ export default class Login extends Component{
     this.state={
       email: '',
       pw1: '',
-      pw2: ''
+      pw2: '',
+      isPwEqual: 'no'
 
     }
   }
 
   handleText = (e) => {
-    alert(e.target)
-    this.setState({
-      // [name]: value
-    })
+    // console.log([key])
+    console.log(e)
+    console.log([e])
+    this.handlePwCheck();
   };
+
+handlePwCheck= ()=>{
+  if(this.state.pw1===this.state.pw2 && this.state.pw1.length>0){
+    this.setState({
+      isPwEqual: 'yes'
+    });
+
+  }
+  else{
+    this.setState({
+      isPwEqual: 'no'
+    })
+  }
+
+}
 
 render(){
 
@@ -34,25 +50,26 @@ render(){
 <TouchableOpacity style={styles.loginForm}>
 <Form
 placeholder="enter your email address"
-name='email'
 value={this.state.email}
-onChangeText={this.handleText}/>
+type="email"
+onChangeText={(email)=>this.setState({email})}/>
 <Form placeholder="enter your pw"
 name='pw1'
 value={this.state.pw1}
-onChangeText={this.handleText}/>
+onChangeText={(pw1)=>this.setState({pw1})}/>
 <Form placeholder="enter your pw again"
 name='pw2'
 value={this.state.pw2}
-onChangeText={this.handleText}/>
+onChangeText={(pw2)=>this.setState({pw2})}/>
 
 </TouchableOpacity>
 
-    <Button title="Switch to Login" onPress={()=>alert('login pressed')}/>
+    <Button title="Submit Login" onPress={this.handlePwCheck}/>
     <Button title="TAke me to camera stuff" onPress={()=>this.props.navigation.navigate('Camera')}/>
-  <Text>  {this.state.name}</Text>
-  <Text>  {this.state.pw1}</Text>
-    <Text>{this.state.pw2}</Text>
+    <Text style={styles.text}>{this.state.email}</Text>
+    <Text style={styles.text}>{this.state.pw1}</Text>
+    <Text style={styles.text}>{this.state.pw2}</Text>
+    <Text>{this.state.isPwEqual}</Text>
     </View>
   )
   }
@@ -68,6 +85,9 @@ const styles = StyleSheet.create({
     // borderWidth: 0.5,
     // backgroundColor: 'red',
     width: '80%',
+  },
+text:{
+    color: 'white',
   },
   textHeading:{
     fontSize: 24,
